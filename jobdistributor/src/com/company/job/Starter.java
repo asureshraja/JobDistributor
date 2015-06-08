@@ -1,4 +1,4 @@
-package com.company;
+package com.company.job;
 
 /**
  * Created by suresh on 6/7/2015.

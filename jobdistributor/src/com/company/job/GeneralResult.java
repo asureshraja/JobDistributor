@@ -1,4 +1,4 @@
-package com.company;
+package com.company.job;
 
 import java.io.Serializable;
 import java.net.Socket;

@@ -1,4 +1,4 @@
-package com.company;
+package com.company.job;
 
 import java.net.Socket;
 import java.util.ArrayList;
