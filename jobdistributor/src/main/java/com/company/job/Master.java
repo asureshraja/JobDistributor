@@ -52,7 +52,6 @@ public class Master {
 
             //waits for object receiving machines to join network
             threadPool.execute(new Runnable() {
-                @Override
                 public void run() {
                     while (true) {
                         try {
@@ -71,14 +70,13 @@ public class Master {
 
             //waits for result sending sockets
             threadPool.execute(new Runnable() {
-                @Override
                 public void run() {
                     while (true) {
                         try {
                             final Socket client = receivingServerHandler.accept();
                             resultSendingSockets.add(client);
                             threadPool.execute(new Runnable() {
-                                @Override
+
                                 public void run() {
                                     while(true){
                                         synchronized (client){
@@ -112,7 +110,6 @@ public class Master {
 
             //takes from job queue and send it to object receiving handlers
             threadPool.execute(new Runnable() {
-                @Override
                 public void run() {
                     while(true){
 

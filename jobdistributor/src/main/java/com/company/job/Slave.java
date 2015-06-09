@@ -33,7 +33,6 @@ public class Slave {
                 ExecutorService threadPool = Executors.newFixedThreadPool(5);
                 final ExecutorService executorPool = Executors.newFixedThreadPool(threads);
                 threadPool.execute(new Runnable() {
-                    @Override
                     public void run() {
                         while (true) {
                             synchronized (jobReceiverHandle){
@@ -62,12 +61,10 @@ public class Slave {
                 });
 
                 threadPool.execute(new Runnable() {
-                    @Override
                     public void run() {
                         while (true) {
                             if (jobQueue.size() > 0) {
                                 executorPool.execute(new Runnable() {
-                                    @Override
                                     public void run() {
                                         if(jobQueue.size()>0){
                                             ObjectOutputStream out = null;
