@@ -1,15 +1,12 @@
 package com.company.data;
 
-import com.company.datatypes.KyotoSystem;
-import com.company.job.GeneralJob;
+import com.company.kyotoapi.KyotoSystem;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.SocketHandler;
 
 /**
  * Created by suresh on 8/6/15.

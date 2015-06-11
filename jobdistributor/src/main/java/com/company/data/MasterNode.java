@@ -1,6 +1,6 @@
 package com.company.data;
 
-import com.company.datatypes.KyotoSystem;
+import com.company.kyotoapi.KyotoSystem;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -19,6 +19,7 @@ public class Master {
     private final int dataPortChannel;
     private final int portChannel2;
     private MasterNode mn;
+    private Slave defaultSlave;
     public MasterNode getMasterDataNode() {
         return mn;
     }
@@ -44,6 +45,7 @@ public class Master {
         this.dataPortChannel=dataPortChannel;
         this.mn=new MasterNode(dataFolderName,this.dataPortChannel);
         this.mn.start();
+        defaultSlave = new Slave("defaultSlave",dataFolderName+"/slavedata/","127.0.0.1",portChannel1,portChannel2,dataPortChannel);
     }
     public GeneralResult getResult(){
         if (resultQueue.size()>0){
@@ -170,5 +172,7 @@ public class Master {
             System.out.println("unable to make connection on port 2000");
 
         }
+
+        defaultSlave.start();
     }
 }

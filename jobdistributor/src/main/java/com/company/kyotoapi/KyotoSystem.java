@@ -1,13 +1,10 @@
-package com.company.datatypes;
+package com.company.kyotoapi;
 
-import fm.last.commons.kyoto.DbType;
 import fm.last.commons.kyoto.KyotoDb;
 import fm.last.commons.kyoto.factory.KyotoDbBuilder;
-import fm.last.commons.kyoto.factory.Mode;
-import kyotocabinet.DB;
 
 import java.io.File;
-import java.util.EnumSet;
+import java.io.IOException;
 /*
 kyoto database structure key
 tablesnames=,,,,
@@ -293,7 +290,25 @@ public class KyotoSystem {
     public KyotoSystem(String dataFolder) {
         tempdatas = new File(dataFolder+"/TEMP.kch");
         permdatas = new File(dataFolder+"/PERM.kch");
+        if(!tempdatas.exists()){
+            try {
+                tempdatas.getParentFile().mkdir();
+                tempdatas.createNewFile();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(!permdatas .exists()){
+            try {
+                permdatas.getParentFile().mkdir();
+                permdatas.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         tempkyotoDb  = new KyotoDbBuilder(tempdatas).build();
+
         permkyotoDb  = new KyotoDbBuilder(permdatas).build();
     }
 

@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
  */
 public class Slave {
     private final  String name;
-    private final  int threads;
     private final String serverIP;
     private final String dataFolderName;
     private final int serverPortChannel1;
@@ -28,10 +27,9 @@ public class Slave {
     public final Slave getSlaveObject(){
         return this;
     }
-    public Slave(String name,String dataFolderName, int threads, String serverIP, int serverPortChannel1, int serverPortChannel2,int serverDataPort) {
+    public Slave(String name,String dataFolderName, String serverIP, int serverPortChannel1, int serverPortChannel2,int serverDataPort) {
         this.dataFolderName=dataFolderName;
         this.name = name;
-        this.threads = threads;
         this.serverIP = serverIP;
         this.serverPortChannel1 = serverPortChannel1;
         this.serverPortChannel2 = serverPortChannel2;
@@ -49,7 +47,7 @@ public class Slave {
             final Queue jobQueue = new LinkedList<GeneralJob>();
             try {
                 ExecutorService threadPool = Executors.newFixedThreadPool(5);
-                final ExecutorService executorPool = Executors.newFixedThreadPool(threads);
+                final ExecutorService executorPool = Executors.newFixedThreadPool(15);
                 threadPool.execute(new Runnable() {
                     public void run() {
                         while (true) {

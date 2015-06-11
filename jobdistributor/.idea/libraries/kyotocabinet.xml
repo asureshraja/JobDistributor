@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="kyotocabinet">
+    <CLASSES>
+      <root url="jar:///opt/kyotocabinet-java-1.24/kyotocabinet.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
