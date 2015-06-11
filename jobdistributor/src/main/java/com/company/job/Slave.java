@@ -1,4 +1,6 @@
 package com.company.job;
+import com.company.data.DataNode;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -13,21 +15,37 @@ public class Slave {
     private final  String name;
     private final  int threads;
     private final String serverIP;
+    private final String dataFolderName;
     private final int serverPortChannel1;
     private final int serverPortChannel2;
+    private final int serverDataPort;
+    private final Slave selfRef;
+    private DataNode dn;
 
-    public Slave(String name, int threads, String serverIP, int serverPortChannel1, int serverPortChannel2) {
+    public DataNode getDataNode() {
+        return dn;
+    }
+    public final Slave getSlaveObject(){
+        return this;
+    }
+    public Slave(String name,String dataFolderName, int threads, String serverIP, int serverPortChannel1, int serverPortChannel2,int serverDataPort) {
+        this.dataFolderName=dataFolderName;
         this.name = name;
         this.threads = threads;
         this.serverIP = serverIP;
         this.serverPortChannel1 = serverPortChannel1;
         this.serverPortChannel2 = serverPortChannel2;
+        this.serverDataPort=serverDataPort;
+        dn = new DataNode(this.dataFolderName,serverDataPort,serverIP);
+        dn.start();
+        this.selfRef=this;
     }
 
     public void start(){
         try {
             final Socket jobReceiverHandle = new Socket(serverIP,serverPortChannel1);
             final Socket resultSendingHandle = new Socket(serverIP,serverPortChannel2);
+
             final Queue jobQueue = new LinkedList<GeneralJob>();
             try {
                 ExecutorService threadPool = Executors.newFixedThreadPool(5);
@@ -42,7 +60,7 @@ public class Slave {
 
                                             in = new ObjectInputStream(jobReceiverHandle.getInputStream());
                                             jobToWork = (GeneralJob) in.readObject();
-
+                                            jobToWork.setSlave(selfRef);
                                         jobQueue.add(jobToWork);
                                 } catch (ClassNotFoundException e) {
                                     e.printStackTrace();
@@ -74,6 +92,7 @@ public class Slave {
 
                                                 GeneralResult computedResult = new GeneralResult((job).doWork());
                                                 computedResult.setJobDetails(job);
+
                                                 synchronized (resultSendingHandle) {
                                                     out = new ObjectOutputStream(resultSendingHandle.getOutputStream());
                                                     out.writeObject(computedResult);

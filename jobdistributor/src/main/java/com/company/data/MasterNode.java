@@ -1,5 +1,7 @@
 package com.company.data;
 
+import com.company.datatypes.KyotoSystem;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,8 +14,19 @@ import java.util.concurrent.Executors;
  * Created by suresh on 8/6/15.
  */
 public class MasterNode {
+    public MasterNode(String dataFolderName,int portDataChannel) {
+        ks=new KyotoSystem(dataFolderName);
+        this.portDataChannel=portDataChannel;
+
+    }
+    final int portDataChannel;
     final ExecutorService threadPool = Executors.newFixedThreadPool(5);
     final ArrayList<Socket> dataReceivingSockets = new ArrayList<Socket>();
+    private KyotoSystem ks;
+    public KyotoSystem getKyotoSystem() {
+        return ks;
+    }
+
     public void sendTo(final Socket receiverHandle, final boolean permanent, final String tablename, final String commaSeparatedRecord){
         threadPool.execute(new Runnable() {
             public void run() {
@@ -90,7 +103,7 @@ public class MasterNode {
 
     public void start() {
         try {
-            final ServerSocket sendingServerHandler = new ServerSocket(2002,100);
+            final ServerSocket sendingServerHandler = new ServerSocket(portDataChannel,100);
             threadPool.execute(new Runnable() {
                 public void run() {
                     while (true) {

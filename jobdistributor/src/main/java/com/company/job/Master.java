@@ -1,5 +1,7 @@
 package com.company.job;
 
+import com.company.data.MasterNode;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,12 +16,34 @@ import java.util.concurrent.*;
 public class Master {
     private String name;
     private final int portChannel1;
+    private final int dataPortChannel;
     private final int portChannel2;
-
-    public Master(String name,int portChannel1, int portChannel2) {
+    private MasterNode mn;
+    public MasterNode getMasterDataNode() {
+        return mn;
+    }
+    public void submitTo(Socket slave, final GeneralJob jobForSlave){
+        final Socket workerSlave=slave;
+        threadPool.execute(new Runnable() {
+            public void run() {
+                try {
+                    synchronized (workerSlave){
+                        ObjectOutputStream oos = new ObjectOutputStream(workerSlave.getOutputStream());
+                        oos.writeObject(jobForSlave);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    public Master(String name,String dataFolderName,int portChannel1, int portChannel2,int dataPortChannel) {
         this.name=name;
         this.portChannel1 = portChannel1;
         this.portChannel2 = portChannel2;
+        this.dataPortChannel=dataPortChannel;
+        this.mn=new MasterNode(dataFolderName,this.dataPortChannel);
+        this.mn.start();
     }
     public GeneralResult getResult(){
         if (resultQueue.size()>0){
@@ -34,6 +58,7 @@ public class Master {
     final ExecutorService threadPool = Executors.newFixedThreadPool(5);
     final ArrayList<Socket> resultSendingSockets = new ArrayList<Socket>();
     final ArrayList<Socket> objectReceivingSockets = new ArrayList<Socket>();
+
     public static int randInt(int min, int max) {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
@@ -46,8 +71,8 @@ public class Master {
     public void start(){
 
         try {
-            final ServerSocket sendingServerHandler = new ServerSocket(2000,100);
-            final ServerSocket receivingServerHandler = new ServerSocket(2001,100);
+            final ServerSocket sendingServerHandler = new ServerSocket(this.portChannel1,100);
+            final ServerSocket receivingServerHandler = new ServerSocket(this.portChannel2,100);
 
 
             //waits for object receiving machines to join network
@@ -115,9 +140,12 @@ public class Master {
 
                         if(objectReceivingSockets.size()>0 && jobQueue.size()>0){
                             try {
-                                ObjectOutputStream oos = new ObjectOutputStream(objectReceivingSockets.get(randInt(0, objectReceivingSockets.size()-1)).getOutputStream());
-                                synchronized (jobQueue){
-                                    oos.writeObject(jobQueue.remove());
+                                Socket slave = objectReceivingSockets.get(randInt(0, objectReceivingSockets.size()-1));
+                                synchronized (slave){
+                                    ObjectOutputStream oos = new ObjectOutputStream(slave.getOutputStream());
+                                    synchronized (jobQueue){
+                                        oos.writeObject(jobQueue.remove());
+                                    }
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();

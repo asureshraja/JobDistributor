@@ -290,6 +290,13 @@ public class KyotoSystem {
         }
     }
 
+    public KyotoSystem(String dataFolder) {
+        tempdatas = new File(dataFolder+"/TEMP.kch");
+        permdatas = new File(dataFolder+"/PERM.kch");
+        tempkyotoDb  = new KyotoDbBuilder(tempdatas).build();
+        permkyotoDb  = new KyotoDbBuilder(permdatas).build();
+    }
+
     private File tempdatas;
     private File permdatas;
 
@@ -303,12 +310,7 @@ public class KyotoSystem {
 
     private KyotoDb tempkyotoDb;
     private KyotoDb permkyotoDb;
-    public void init(String dataFolder){
-        tempdatas = new File(dataFolder+"/TEMP.kch");
-        permdatas = new File(dataFolder+"/PERM.kch");
-        tempkyotoDb  = new KyotoDbBuilder(tempdatas).build();
-        permkyotoDb  = new KyotoDbBuilder(permdatas).build();
-    }
+
 
 }
 

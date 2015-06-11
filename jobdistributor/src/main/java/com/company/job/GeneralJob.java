@@ -11,6 +11,15 @@ public abstract class GeneralJob<T> {
     private ArrayList metaData = new ArrayList();
     private String UJID= UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d").randomUUID().toString();
     private Socket socketHandler;
+    private Slave slave;
+
+    public Slave getSlave() {
+        return slave;
+    }
+
+    public void setSlave(Slave slave) {
+        this.slave = slave;
+    }
 
     public Socket getSocketHandler() {
         return socketHandler;

@@ -16,16 +16,6 @@ public class Job extends GeneralJob  implements Serializable{
         this.b = b;
     }
 
-    private ArrayList metaData = new ArrayList();
-
-    public ArrayList getMetaData() {
-        return metaData;
-    }
-
-    public void setMetaData(ArrayList metaData) {
-        this.metaData = metaData;
-    }
-
     @Override
     public Object doWork() {
         return a+b;

@@ -15,12 +15,25 @@ import java.util.logging.SocketHandler;
  * Created by suresh on 8/6/15.
  */
 public class DataNode {
+    public DataNode(String dataFolder,int serverDataPort,String ip) {
+        this.dataFolder=dataFolder;
+        ks=new KyotoSystem(this.dataFolder);
+        this.serverDataPort=serverDataPort;
+        this.ip=ip;
+    }
+    private String ip;
+    private int serverDataPort;
     final ExecutorService threadPool = Executors.newFixedThreadPool(5);
+    private  KyotoSystem ks;
+    String dataFolder = "/";
+
+    public KyotoSystem getKyotoSystem() {
+        return ks;
+    }
 
     public void start() {
-        final KyotoSystem ks=new KyotoSystem();
         try {
-            final Socket receiverHandle = new Socket("127.0.0.1",2002);
+            final Socket receiverHandle = new Socket(this.ip,this.serverDataPort);
             threadPool.execute(new Runnable() {
                 public void run() {
                     while (true) {
