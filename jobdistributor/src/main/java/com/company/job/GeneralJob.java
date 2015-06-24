@@ -8,10 +8,15 @@ import java.util.UUID;
  * Created by suresh on 5/6/15.
  */
 public abstract class GeneralJob<T> {
+
     private ArrayList metaData = new ArrayList();
     private String UJID= UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d").randomUUID().toString();
-    private Socket socketHandler;
+    private Socket socket;
     private Slave slave;
+
+    public void setUJID(String UJID) {
+        this.UJID = UJID;
+    }
 
     public Slave getSlave() {
         return slave;
@@ -21,12 +26,12 @@ public abstract class GeneralJob<T> {
         this.slave = slave;
     }
 
-    public Socket getSocketHandler() {
-        return socketHandler;
+    public Socket getSocket() {
+        return socket;
     }
 
-    public void setSocketHandler(Socket socketHandler) {
-        this.socketHandler = socketHandler;
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
     public String getUJID(){
         return this.UJID;

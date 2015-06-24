@@ -1,4 +1,4 @@
-package com.company;
+package com.company.http;
 
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;

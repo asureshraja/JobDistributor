@@ -1,12 +1,9 @@
-package com.company;
+package com.company.http;
 
 /**
  * Created by suresh on 12/6/15.
  */
 import com.lmax.disruptor.RingBuffer;
-
-import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class RequestReceivedEventProducer
 {

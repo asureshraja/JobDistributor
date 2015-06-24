@@ -5,6 +5,7 @@ import fm.last.commons.kyoto.factory.KyotoDbBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 /*
 kyoto database structure key
 tablesnames=,,,,
@@ -129,7 +130,7 @@ public class KyotoSystem {
                 //do nothing
             }else{
                 String temp = tempkyotoDb.get("tablesnames");
-                tempkyotoDb.set("tablesnames",temp.replace(","+tableName,""));
+                tempkyotoDb.set("tablesnames", temp.replace("," + tableName, ""));
             }
             tempkyotoDb.increment("tablescounts", -1l);
             tempkyotoDb.remove("table-" + tableName + "-colcounts");
@@ -223,7 +224,7 @@ public class KyotoSystem {
     public boolean insertIntoTempTable(String tablename,String commaSeparatedRecord){
         long col=1l;
         for(String value:commaSeparatedRecord.split(",")){
-            if(!insertIntoTempTable(tablename,col,value)){
+            if(!insertIntoTempTable(tablename, col, value)){
                 return false;
             }
             col = col +1;
@@ -267,6 +268,42 @@ public class KyotoSystem {
         }
         permkyotoDb.increment("table-" + tablename + "-removed",1l);
         return true;
+    }
+    public ArrayList<String> getPermTableRecord(String tablename,long rowId){
+        String temp = permkyotoDb.get("table-" + tablename + "-colcounts");
+        if(temp==null){
+            System.out.println("table not exists");
+            return null;
+        }
+        ArrayList<String> recordToReturn = new ArrayList<String>();
+        for (int i = 1; i <=Long.parseLong(temp) ; i++) {
+            temp = permkyotoDb.get("table-" + tablename + "-" + String.valueOf(rowId) + "-" + String.valueOf(i));
+            if (temp == null) {
+                System.out.println("no such record found");
+                return null;
+            } else {
+                recordToReturn.add(temp);
+            }
+        }
+        return recordToReturn;
+    }
+    public ArrayList<String> getTempTableRecord(String tablename,long rowId){
+        String temp = tempkyotoDb.get("table-" + tablename + "-colcounts");
+        if(temp==null){
+            System.out.println("table not exists");
+            return null;
+        }
+        ArrayList<String> recordToReturn = new ArrayList<String>();
+        for (int i = 1; i <=Long.parseLong(temp) ; i++) {
+            temp = tempkyotoDb.get("table-" + tablename + "-" + String.valueOf(rowId) + "-" + String.valueOf(i));
+            if (temp == null) {
+                System.out.println("no such record found");
+                return null;
+            } else {
+                recordToReturn.add(temp);
+            }
+        }
+        return recordToReturn;
     }
     public String getPermTableRecord(String tablename,long rowId,long column){
         String temp = permkyotoDb.get("table-" + tablename + "-"+String.valueOf(rowId)+"-"+String.valueOf(column));

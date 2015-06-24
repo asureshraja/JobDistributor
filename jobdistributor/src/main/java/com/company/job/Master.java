@@ -114,9 +114,9 @@ public class Master {
                                                 ObjectInputStream ois;Object result;
                                                 ois = new ObjectInputStream(client.getInputStream());
                                                 result = ois.readObject();
-
-                                                resultQueue.add((GeneralResult)result);
-                                                System.out.println((Integer) ((GeneralResult) resultQueue.remove()).getValue());
+                                                resultQueue.add((GeneralResult) result);
+                                               // System.out.println("received from slave jid" + ((GeneralResult) result).getUJID());
+                                               // System.out.println((Integer) ((GeneralResult) resultQueue.remove()).getValue());
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                                 break;
@@ -146,7 +146,11 @@ public class Master {
                                 synchronized (slave){
                                     ObjectOutputStream oos = new ObjectOutputStream(slave.getOutputStream());
                                     synchronized (jobQueue){
-                                        oos.writeObject(jobQueue.remove());
+                                        GeneralJob a = (GeneralJob)jobQueue.remove();
+                                        //System.out.println("sending job id" + a.getUJID());
+                                        ArrayList<Object> packedWithId=new ArrayList();
+                                        packedWithId.add(a);packedWithId.add(a.getUJID());
+                                        oos.writeObject(packedWithId);
                                     }
                                 }
                             } catch (IOException e) {

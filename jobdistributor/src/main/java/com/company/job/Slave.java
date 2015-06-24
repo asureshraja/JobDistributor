@@ -3,6 +3,7 @@ import com.company.data.DataNode;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
@@ -54,10 +55,13 @@ public class Slave {
                             synchronized (jobReceiverHandle){
                                 ObjectInputStream in = null;
                                 GeneralJob jobToWork;
+                                ArrayList packedWorkWithJid;
                                 try {
 
                                             in = new ObjectInputStream(jobReceiverHandle.getInputStream());
-                                            jobToWork = (GeneralJob) in.readObject();
+                                            packedWorkWithJid = (ArrayList) in.readObject();
+                                            jobToWork = (GeneralJob)packedWorkWithJid.get(0);
+                                            jobToWork.setUJID((String)packedWorkWithJid.get(1));
                                             jobToWork.setSlave(selfRef);
                                         jobQueue.add(jobToWork);
                                 } catch (ClassNotFoundException e) {
@@ -87,14 +91,14 @@ public class Slave {
                                             try {
                                                 GeneralJob job;
                                                 job = (GeneralJob) jobQueue.remove();
-
+                                                //System.out.println("received details"+job.getUJID());
                                                 GeneralResult computedResult = new GeneralResult((job).doWork());
                                                 computedResult.setJobDetails(job);
-
+                                                //System.out.println("result details" + computedResult.getUJID());
                                                 synchronized (resultSendingHandle) {
                                                     out = new ObjectOutputStream(resultSendingHandle.getOutputStream());
                                                     out.writeObject(computedResult);
-                                                    System.out.println("from " + name);
+                                              //      System.out.println("from " + name);
                                                 }
 
 

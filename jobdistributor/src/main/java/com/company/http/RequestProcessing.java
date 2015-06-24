@@ -1,4 +1,4 @@
-package com.company;
+package com.company.http;
 import com.lmax.disruptor.EventHandler;
 
 import java.io.*;

@@ -12,12 +12,14 @@ public class Job extends GeneralJob  implements Serializable{
 
 
     public Job(int a, int b) {
+
         this.a = a;
         this.b = b;
     }
 
     @Override
     public Object doWork() {
+
         return a+b;
     }
 

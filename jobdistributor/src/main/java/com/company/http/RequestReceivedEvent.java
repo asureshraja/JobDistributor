@@ -1,4 +1,4 @@
-package com.company;
+package com.company.http;
 
 /**
  * Created by suresh on 12/6/15.
