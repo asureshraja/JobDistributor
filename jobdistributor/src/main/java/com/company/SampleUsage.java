@@ -1,4 +1,9 @@
-package com.company.job;
+package com.company;
+
+import com.company.job.GeneralResult;
+import com.company.job.Job;
+import com.company.job.JobManager;
+import com.company.job.Master;
 
 /**
  * Created by suresh on 6/7/2015.
@@ -16,7 +21,6 @@ public class SampleUsage {
         jm.submitJob(job1);
         System.out.println((Integer) ((GeneralResult) jm.getResult(job)).getValue());
         System.out.println((Integer) ((GeneralResult) jm.getResult(job1)).getValue());
-
 
     }
 }
